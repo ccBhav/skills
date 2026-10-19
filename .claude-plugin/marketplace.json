@@ -1,0 +1,24 @@
+{
+  "name": "ccbhav-skills",
+  "owner": {
+    "name": "Bhavek Budhia"
+  },
+  "metadata": {
+    "description": "Bhavek's personal Claude Code skills"
+  },
+  "plugins": [
+    {
+      "name": "ccbhav-skills",
+      "description": "Bhavek's personal Claude Code skills",
+      "source": "./",
+      "strict": false,
+      "skills": [
+        "./skills/bulletproof",
+        "./skills/cc-pr-review",
+        "./skills/lore",
+        "./skills/pr-description",
+        "./skills/summerize-app"
+      ]
+    }
+  ]
+}
