@@ -1,5 +1,7 @@
 # Testing an SDK
 
+This file covers testing the SDK itself. For the mock that consumers use to test *their* code, see [mocking.md](mocking.md).
+
 Test layers, cheapest first. Each catches a failure the others miss.
 
 | Layer | Catches | TypeScript | Go |

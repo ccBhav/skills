@@ -50,4 +50,5 @@ Mark each item **pass / fail / n.a.** with evidence (`file:line` or the call you
 - [ ] JS: types shipped (`.d.ts` from JSDoc or TS); required args validated at runtime with errors that name the parameter; unknown option keys warned.
 - [ ] Go: module path carries major version ≥2; supports last two Go releases; minimal deps.
 - [ ] Test layers present: unit with mock transport, recorded HTTP, contract or live smoke, compiled examples.
+- [ ] A mock package ships with the SDK (same version): real client over a fake transport, handlers per operation, seeded faker factories typed against SDK types, real error classes. See [mocking.md](mocking.md).
 - [ ] Retry/timeout tests are deterministic (fake timers / injected clock).

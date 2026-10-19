@@ -1,6 +1,6 @@
 ---
 name: sdk-design-patterns
-description: Design or review a client SDK / client library for an API (REST, gRPC, WebSocket) in TypeScript, JavaScript or Go. Use when building a new SDK, wrapping an API in a client package, generating SDKs from an OpenAPI spec (Stainless, Speakeasy, Fern, openapi-generator, oapi-codegen), designing SDK error types, versioning or deprecating SDK methods, testing an SDK, or auditing an existing SDK's ergonomics.
+description: Design or review a client SDK / client library for an API (REST, gRPC, WebSocket) in TypeScript, JavaScript or Go. Use when building a new SDK, wrapping an API in a client package, generating SDKs from an OpenAPI spec (Stainless, Speakeasy, Fern, openapi-generator, oapi-codegen), designing SDK error types, versioning or deprecating SDK methods, testing an SDK, shipping a mock / test double of the SDK for consumers' unit tests, or auditing an existing SDK's ergonomics.
 ---
 
 # SDK Design Patterns
@@ -51,7 +51,8 @@ const inv = await client.invoices.create({ customerId, amount: 1000 });
 3. **Shape the surface** in the target language: [references/typescript.md](references/typescript.md), [references/javascript.md](references/javascript.md) (plain-JS source or JS callers; read alongside typescript.md) or [references/go.md](references/go.md). Done when every resource, verb, option and return type in the README compiles against the planned types.
 4. **Errors and versioning**: [references/errors-and-versioning.md](references/errors-and-versioning.md). Done when the error hierarchy, the API-version pinning and the deprecation path are written down.
 5. **Testing and release**: [references/testing.md](references/testing.md). Done when each test layer has a tool and a CI trigger.
-6. **Self-review** the design against [references/review-checklist.md](references/review-checklist.md). Done when every item is pass or consciously waived with a reason.
+6. **Ship the mock**: a companion package that gives consumers a real client over a fake transport with faker-backed factories, for their unit tests. See [references/mocking.md](references/mocking.md). Done when every SDK operation has a default handler and every response type has a seeded factory.
+7. **Self-review** the design against [references/review-checklist.md](references/review-checklist.md). Done when every item is pass or consciously waived with a reason.
 
 ## Review
 
