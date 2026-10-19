@@ -1,0 +1,492 @@
+<title>Feature Name Plan</title>
+<!--
+  plan-feature page shell. Copy to docs/plans/<slug>/plan.html and fill in.
+  Everything marked FILL: is placeholder content to replace. See references/page-guide.md.
+-->
+<style>
+:root {
+  --bg: #fbfaf7; --surface: #ffffff; --surface-2: #f3f1ec; --border: #e4e0d8;
+  --text: #1f1d1a; --muted: #6b665e; --accent: #2f5fd0; --accent-soft: #e6edfb;
+  --ok: #1d7a4a; --ok-soft: #e3f3ea; --warn: #9a6400; --warn-soft: #fbf0d9;
+  --err: #b42323; --err-soft: #fbe5e5;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161514; --surface: #1e1d1b; --surface-2: #262522; --border: #36342f;
+    --text: #ece9e3; --muted: #a39e94; --accent: #7fa2ff; --accent-soft: #23304f;
+    --ok: #5cc28c; --ok-soft: #1b3326; --warn: #e2b04f; --warn-soft: #3a2f17;
+    --err: #ff7b7b; --err-soft: #3d1f1f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #161514; --surface: #1e1d1b; --surface-2: #262522; --border: #36342f;
+  --text: #ece9e3; --muted: #a39e94; --accent: #7fa2ff; --accent-soft: #23304f;
+  --ok: #5cc28c; --ok-soft: #1b3326; --warn: #e2b04f; --warn-soft: #3a2f17;
+  --err: #ff7b7b; --err-soft: #3d1f1f;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--sans); }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .9em; background: var(--surface-2); padding: .1em .35em; border-radius: 4px; }
+
+.layout { max-width: 1120px; margin: 0 auto; padding: 32px 16px 80px; display: grid; gap: 40px; grid-template-columns: minmax(0, 1fr); }
+main { min-width: 0; }
+@media (min-width: 960px) { .layout { grid-template-columns: 200px minmax(0, 1fr); } }
+
+nav.toc { font-size: 14px; }
+nav.toc ol { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
+@media (min-width: 960px) {
+  nav.toc { position: sticky; top: 24px; align-self: start; }
+  nav.toc ol { flex-direction: column; }
+}
+nav.toc a { color: var(--muted); text-decoration: none; }
+nav.toc a:hover { color: var(--text); }
+
+header.plan-head h1 { font-size: clamp(28px, 5vw, 40px); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip { font-size: 13px; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
+.chip strong { color: var(--text); font-weight: 600; }
+.brief { font-size: 18px; background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 16px 20px; margin: 0; }
+
+section.plan-section { margin-top: 48px; scroll-margin-top: 24px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 16px; }
+.section-head h2 { font-size: 22px; margin: 0; }
+h3 { font-size: 18px; margin: 28px 0 8px; }
+.comment-btn { display: none; font: 13px var(--sans); color: var(--muted); background: transparent; border: 1px solid var(--border); border-radius: 999px; padding: 3px 12px; cursor: pointer; white-space: nowrap; }
+.comment-btn:hover { color: var(--accent); border-color: var(--accent); }
+.comments-on .comment-btn { display: inline-block; }
+
+dl.glossary { display: grid; grid-template-columns: 1fr; gap: 0; margin: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+@media (min-width: 640px) { dl.glossary { grid-template-columns: minmax(140px, 220px) 1fr; } }
+dl.glossary dt, dl.glossary dd { margin: 0; padding: 10px 14px; border-top: 1px solid var(--border); }
+dl.glossary dt { font-weight: 600; }
+dl.glossary dt:first-of-type, dl.glossary dt:first-of-type + dd { border-top: 0; }
+@media (max-width: 639px) { dl.glossary dd { border-top: 0; padding-top: 0; } }
+
+.diagram { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; overflow-x: auto; margin: 12px 0; }
+.diagram pre.mermaid { margin: 0; background: none; text-align: center; }
+.diagram svg { max-width: 100%; height: auto; }
+
+ol.steps { padding-left: 20px; }
+ol.steps li { margin-bottom: 10px; }
+.step-meta { display: block; font-size: 14px; color: var(--muted); }
+
+.cases { display: grid; gap: 16px; grid-template-columns: 1fr; }
+.case { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; border-top: 4px solid var(--border); }
+.case h3 { margin-top: 0; }
+.case.happy { border-top-color: var(--ok); }
+.case.extreme { border-top-color: var(--warn); }
+.case.error { border-top-color: var(--err); }
+.tag { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; padding: 2px 8px; border-radius: 4px; }
+.tag.happy { background: var(--ok-soft); color: var(--ok); }
+.tag.extreme { background: var(--warn-soft); color: var(--warn); }
+.tag.error { background: var(--err-soft); color: var(--err); }
+
+.code-tabs { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); margin: 12px 0; }
+.tabbar { display: flex; gap: 2px; background: var(--surface-2); border-bottom: 1px solid var(--border); padding: 4px; }
+.tabbar button { font: 13px var(--sans); border: 0; background: transparent; color: var(--muted); padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.tabbar button[aria-selected="true"] { background: var(--surface); color: var(--text); font-weight: 600; }
+.tabbar .copy { margin-left: auto; }
+.code-tabs pre { margin: 0; padding: 14px 16px; overflow-x: auto; font: 13.5px/1.55 var(--mono); }
+.code-tabs pre[hidden] { display: none; }
+
+.demo { background: var(--accent-soft); border-radius: var(--radius); padding: 16px 18px; margin: 12px 0 28px; }
+.demo h4 { margin: 0 0 10px; font-size: 15px; }
+.demo form { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; }
+.demo label { display: flex; flex-direction: column; font-size: 13px; color: var(--muted); gap: 4px; flex: 1 1 160px; }
+.demo input, .demo textarea { font: 15px var(--mono); padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); width: 100%; }
+.demo button { font: 14px var(--sans); padding: 8px 14px; border-radius: 6px; border: 1px solid var(--accent); cursor: pointer; }
+.demo .run { background: var(--accent); color: var(--surface); }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.presets button { background: var(--surface); color: var(--text); border-color: var(--border); font-size: 13px; padding: 5px 10px; }
+.demo output { display: block; margin-top: 12px; font: 14px var(--mono); background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; white-space: pre-wrap; min-height: 42px; }
+.demo output.ok { border-left: 4px solid var(--ok); }
+.demo output.fail { border-left: 4px solid var(--err); color: var(--err); }
+.demo .note { font-size: 12.5px; color: var(--muted); margin: 8px 0 0; }
+
+ul.decisions, ul.risks { padding-left: 20px; }
+ul.decisions li, ul.risks li { margin-bottom: 6px; }
+.changelog { font-size: 14px; color: var(--muted); }
+
+details.appendix-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin: 10px 0; scroll-margin-top: 24px; }
+details.appendix-item > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style-position: inside; }
+details.appendix-item > summary .id { font-family: var(--mono); color: var(--accent); margin-right: 6px; }
+details.appendix-item[open] > summary { border-bottom: 1px solid var(--border); }
+.appendix-body { padding: 4px 16px 16px; }
+pre.code { margin: 12px 0; padding: 14px 16px; overflow-x: auto; font: 13.5px/1.55 var(--mono); background: var(--surface-2); border-radius: 8px; }
+.table-wrap { overflow-x: auto; }
+table.fields { border-collapse: collapse; width: 100%; font-size: 14px; margin: 12px 0; }
+table.fields th, table.fields td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+table.fields th { color: var(--muted); font-weight: 600; }
+</style>
+
+<div class="layout">
+  <nav class="toc" aria-label="Contents">
+    <ol>
+      <li><a href="#brief">Brief</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+      <li><a href="#outline">Plan outline</a></li>
+      <li><a href="#use-cases">Use cases</a></li>
+      <li><a href="#code">Code sketches</a></li>
+      <li><a href="#decisions">Key decisions</a></li>
+      <li><a href="#open">Open questions</a></li>
+      <li><a href="#changelog">Changelog</a></li>
+      <li><a href="#appendix">Appendix</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="plan-head" id="brief">
+      <h1>FILL: Feature name</h1>
+      <div class="meta">
+        <span class="chip">Version <strong>v0.1</strong></span>
+        <span class="chip">Status <strong>draft</strong></span>
+        <span class="chip">Jira <a href="FILL">PROJ-123</a></span>
+        <span class="chip">Updated <strong>2026-01-01</strong></span>
+      </div>
+      <p class="brief">FILL: 3–5 plain sentences — what we're building, why, for whom, and what done looks like.</p>
+    </header>
+
+    <section class="plan-section" id="glossary">
+      <div class="section-head"><h2>Glossary</h2><button class="comment-btn" type="button">Comment</button></div>
+      <dl class="glossary">
+        <dt>FILL: Term</dt><dd>One plain line on what it means here.</dd>
+      </dl>
+    </section>
+
+    <section class="plan-section" id="outline">
+      <div class="section-head"><h2>Plan outline</h2><button class="comment-btn" type="button">Comment</button></div>
+      <div class="diagram"><pre class="mermaid">
+flowchart LR
+  A[Client] --> B[API route] --> C[Use case] --> D[(Database)]
+      </pre></div>
+      <p>FILL: one or two sentences on how the parts fit together.</p>
+
+      <h3>Phase 1 — FILL</h3>
+      <ol class="steps">
+        <li><strong>FILL: Step</strong> — what changes.
+          <span class="step-meta">Where: <code>path/to/file.ts</code> · Done when: FILL</span></li>
+      </ol>
+    </section>
+
+    <section class="plan-section" id="use-cases">
+      <div class="section-head"><h2>Use cases</h2><button class="comment-btn" type="button">Comment</button></div>
+      <div class="cases">
+        <article class="case happy" id="case-happy">
+          <span class="tag happy">Happy path</span>
+          <h3>FILL: short name</h3>
+          <p><strong>Scenario:</strong> FILL. <strong>Input:</strong> FILL.</p>
+          <div class="diagram"><pre class="mermaid">
+sequenceDiagram
+  actor U as User
+  U->>API: request
+  API-->>U: response
+          </pre></div>
+          <p><strong>Expected result:</strong> FILL.</p>
+        </article>
+        <article class="case extreme" id="case-extreme">
+          <span class="tag extreme">Extreme path</span>
+          <h3>FILL</h3>
+          <p>FILL</p>
+        </article>
+        <article class="case error" id="case-error">
+          <span class="tag error">Error path</span>
+          <h3>FILL</h3>
+          <p>FILL</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="plan-section" id="code">
+      <div class="section-head"><h2>Code sketches</h2><button class="comment-btn" type="button">Comment</button></div>
+
+      <!-- One block per sketch: an h3, a sentence, a .code-tabs, and (optionally) a .demo. -->
+      <h3>FILL: What this sketch shows</h3>
+      <p>FILL: what the code does and where it would live.</p>
+      <div class="code-tabs" data-sketch="batchCount">
+        <div class="tabbar" role="tablist">
+          <button role="tab" aria-selected="true" data-lang="js">JavaScript</button>
+          <button role="tab" aria-selected="false" data-lang="ts">TypeScript</button>
+          <button role="tab" aria-selected="false" data-lang="go">Go</button>
+          <button class="copy" type="button">Copy</button>
+        </div>
+        <pre data-lang="js"><code><!-- rendered from SKETCHES.batchCount --></code></pre>
+        <pre data-lang="ts" hidden><code>/** How many batches an export of `rows` rows needs. */
+export function batchCount(rows: number, batchSize = 500): number {
+  if (!Number.isInteger(rows) || rows &lt; 0) {
+    throw new RangeError(`rows must be a whole number ≥ 0, got ${rows}`);
+  }
+  return Math.ceil(rows / batchSize);
+}</code></pre>
+        <pre data-lang="go" hidden><code>// BatchCount returns how many batches an export of rows rows needs.
+func BatchCount(rows, batchSize int) (int, error) {
+	if rows &lt; 0 {
+		return 0, fmt.Errorf("rows must be ≥ 0, got %d", rows)
+	}
+	return (rows + batchSize - 1) / batchSize, nil
+}</code></pre>
+      </div>
+      <div class="demo" data-demo="batchCount">
+        <h4>Try it</h4>
+        <!-- form fields, presets and output are built from DEMOS.batchCount -->
+      </div>
+    </section>
+
+    <section class="plan-section" id="decisions">
+      <div class="section-head"><h2>Key decisions</h2><button class="comment-btn" type="button">Comment</button></div>
+      <ul class="decisions">
+        <li><strong>D1</strong> — FILL: decision in one line. <em>Why:</em> FILL.</li>
+      </ul>
+      <p class="changelog">Full question-by-question log: <code>docs/plans/FILL-slug/decisions.md</code></p>
+    </section>
+
+    <section class="plan-section" id="open">
+      <div class="section-head"><h2>Open questions &amp; risks</h2><button class="comment-btn" type="button">Comment</button></div>
+      <ul class="risks"><li>FILL — owner / next step</li></ul>
+    </section>
+
+    <section class="plan-section" id="changelog">
+      <div class="section-head"><h2>Changelog</h2><button class="comment-btn" type="button">Comment</button></div>
+      <ul class="changelog"><li><strong>v0.1</strong> — 2026-01-01 — First draft.</li></ul>
+    </section>
+
+    <section class="plan-section" id="appendix">
+      <div class="section-head"><h2>Appendix</h2><button class="comment-btn" type="button">Comment</button></div>
+      <p>Detail for whoever builds this: full data models, longer code, API examples and links. FILL: keep only the groups this plan needs.</p>
+
+      <h3>Data models</h3>
+      <details class="appendix-item" id="a1">
+        <summary><span class="id">A1</span>FILL: Model name</summary>
+        <div class="appendix-body">
+          <p>FILL: what this is and which steps use it.</p>
+          <div class="code-tabs">
+            <div class="tabbar" role="tablist">
+              <button role="tab" aria-selected="true" data-lang="ts">TypeScript</button>
+              <button role="tab" aria-selected="false" data-lang="go">Go</button>
+              <button role="tab" aria-selected="false" data-lang="sql">SQL</button>
+              <button class="copy" type="button">Copy</button>
+            </div>
+            <pre data-lang="ts"><code>export interface ExportJob {
+  id: string;
+  status: "queued" | "running" | "done" | "failed";
+  rowCount: number;
+  createdAt: Date;
+}</code></pre>
+            <pre data-lang="go" hidden><code>type ExportJob struct {
+	ID        string    `json:"id"`
+	Status    string    `json:"status"`
+	RowCount  int       `json:"rowCount"`
+	CreatedAt time.Time `json:"createdAt"`
+}</code></pre>
+            <pre data-lang="sql" hidden><code>CREATE TABLE export_jobs (
+  id         uuid PRIMARY KEY,
+  status     text NOT NULL,
+  row_count  integer NOT NULL CHECK (row_count &gt;= 0),
+  created_at timestamptz NOT NULL DEFAULT now()
+);</code></pre>
+          </div>
+          <div class="table-wrap"><table class="fields">
+            <thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead>
+            <tbody><tr><td><code>status</code></td><td>enum</td><td>FILL: where the job is in its lifecycle</td></tr></tbody>
+          </table></div>
+        </div>
+      </details>
+
+      <h3>API examples</h3>
+      <details class="appendix-item" id="a2">
+        <summary><span class="id">A2</span>FILL: POST /exports — happy path</summary>
+        <div class="appendix-body">
+          <p>FILL: what this example shows.</p>
+          <pre class="code">POST /exports
+Content-Type: application/json
+
+{"rows": 1200}</pre>
+          <pre class="code">202 Accepted
+{"id": "…", "status": "queued"}</pre>
+        </div>
+      </details>
+    </section>
+  </main>
+</div>
+
+<script>
+// ---------------------------------------------------------------------------
+// SKETCHES: the JavaScript code sketches. Each is shown in its JS tab via
+// fn.toString(), and called by its demo — so the code readers see is the code
+// that runs. FILL: replace with this plan's sketches (plain functions, JSDoc).
+// ---------------------------------------------------------------------------
+const SKETCHES = {
+  /**
+   * How many batches an export of `rows` rows needs.
+   * @param {number} rows
+   * @param {number} [batchSize=500]
+   * @returns {number}
+   */
+  batchCount: function batchCount(rows, batchSize = 500) {
+    if (!Number.isInteger(rows) || rows < 0) {
+      throw new RangeError(`rows must be a whole number ≥ 0, got ${rows}`);
+    }
+    return Math.ceil(rows / batchSize);
+  },
+};
+
+// ---------------------------------------------------------------------------
+// DEMOS: one entry per .demo[data-demo]. Field types: number | text | json | list.
+// presets map to the use cases (happy / extreme / error). `run` gets parsed
+// values and returns anything; a thrown error is shown as the error result.
+// ---------------------------------------------------------------------------
+const DEMOS = {
+  batchCount: {
+    fields: [
+      { name: "rows", label: "Rows to export", type: "number", value: 1200 },
+      { name: "batchSize", label: "Batch size", type: "number", value: 500 },
+    ],
+    presets: {
+      happy:   { label: "Happy: 1,200 rows",   values: { rows: 1200, batchSize: 500 } },
+      extreme: { label: "Extreme: 5M rows",    values: { rows: 5000000, batchSize: 500 } },
+      error:   { label: "Error: -1 rows",      values: { rows: -1, batchSize: 500 } },
+    },
+    run: ({ rows, batchSize }) => {
+      const n = SKETCHES.batchCount(rows, batchSize);
+      return `${n} batch${n === 1 ? "" : "es"}`;
+    },
+    note: "Runs the JavaScript version. The TypeScript and Go versions follow the same logic.",
+  },
+};
+
+// ---------------------------------------------------------------------------
+// Wiring — usually no need to edit below this line.
+// ---------------------------------------------------------------------------
+
+// Code tabs: fill JS panes from SKETCHES, switch tabs, copy.
+function sourceOf(fn) {
+  // fn.toString() keeps the indentation the function had inside SKETCHES; strip it.
+  const lines = fn.toString().split("\n");
+  const rest = lines.slice(1).filter((l) => l.trim());
+  const indent = Math.min(...rest.map((l) => l.match(/^ */)[0].length), Infinity);
+  const strip = Number.isFinite(indent) ? indent : 0;
+  return [lines[0], ...lines.slice(1).map((l) => l.slice(Math.min(strip, l.match(/^ */)[0].length)))].join("\n");
+}
+document.querySelectorAll(".code-tabs").forEach((box) => {
+  const fn = SKETCHES[box.dataset.sketch];
+  const jsPane = box.querySelector('pre[data-lang="js"] code');
+  if (fn && jsPane) jsPane.textContent = sourceOf(fn);
+  const tabs = box.querySelectorAll('[role="tab"]');
+  tabs.forEach((tab) => tab.addEventListener("click", () => {
+    tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tab)));
+    box.querySelectorAll("pre").forEach((p) => { p.hidden = p.dataset.lang !== tab.dataset.lang; });
+  }));
+  box.querySelector(".copy")?.addEventListener("click", async (e) => {
+    const visible = box.querySelector("pre:not([hidden])");
+    try { await navigator.clipboard.writeText(visible.textContent); e.target.textContent = "Copied"; }
+    catch { e.target.textContent = "Select & copy"; }
+    setTimeout(() => { e.target.textContent = "Copy"; }, 1500);
+  });
+});
+
+// Appendix: open a collapsed item when a link points at it.
+function openTarget() {
+  const el = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (el && el.tagName === "DETAILS") { el.open = true; el.scrollIntoView(); }
+}
+addEventListener("hashchange", openTarget);
+openTarget();
+document.querySelectorAll('a[href^="#"]').forEach((a) => a.addEventListener("click", () => {
+  const el = document.getElementById(a.getAttribute("href").slice(1));
+  if (el && el.tagName === "DETAILS") el.open = true;
+}));
+
+// Demos: build the form, presets and output from DEMOS.
+function parseField(type, raw) {
+  if (type === "number") {
+    if (raw.trim() === "") throw new TypeError("Enter a number");
+    const n = Number(raw);
+    if (Number.isNaN(n)) throw new TypeError(`"${raw}" is not a number`);
+    return n;
+  }
+  if (type === "json") return JSON.parse(raw);
+  if (type === "list") return raw.split(",").map((s) => s.trim()).filter(Boolean);
+  return raw;
+}
+function show(out, value, ok) {
+  out.className = ok ? "ok" : "fail";
+  out.textContent = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+}
+document.querySelectorAll(".demo[data-demo]").forEach((box) => {
+  const demo = DEMOS[box.dataset.demo];
+  if (!demo) return;
+  const form = document.createElement("form");
+  demo.fields.forEach((f) => {
+    const label = document.createElement("label");
+    label.textContent = f.label;
+    const input = document.createElement(f.type === "json" ? "textarea" : "input");
+    input.name = f.name;
+    if (f.type === "number") { input.type = "text"; input.inputMode = "decimal"; }
+    input.value = f.type === "json" ? JSON.stringify(f.value ?? null, null, 2) : (f.value ?? "");
+    label.append(input);
+    form.append(label);
+  });
+  const runBtn = document.createElement("button");
+  runBtn.className = "run"; runBtn.type = "submit"; runBtn.textContent = "Run";
+  form.append(runBtn);
+  const out = document.createElement("output");
+  out.textContent = "Press Run or pick a preset.";
+  const run = () => {
+    try {
+      const args = {};
+      demo.fields.forEach((f) => { args[f.name] = parseField(f.type, form.elements[f.name].value); });
+      show(out, demo.run(args), true);
+    } catch (err) {
+      show(out, `${err.name}: ${err.message}`, false);
+    }
+  };
+  form.addEventListener("submit", (e) => { e.preventDefault(); run(); });
+  const presets = document.createElement("div");
+  presets.className = "presets";
+  Object.values(demo.presets || {}).forEach((p) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.textContent = p.label;
+    b.addEventListener("click", () => {
+      demo.fields.forEach((f) => {
+        if (!(f.name in p.values)) return;
+        const v = p.values[f.name];
+        form.elements[f.name].value = f.type === "json" ? JSON.stringify(v, null, 2) : v;
+      });
+      run();
+    });
+    presets.append(b);
+  });
+  box.append(form, presets, out);
+  if (demo.note) { const n = document.createElement("p"); n.className = "note"; n.textContent = demo.note; box.append(n); }
+});
+
+// Comments: "Comment" buttons open claude.ai's own comment box on that section.
+// Hidden unless the page is viewed somewhere that supports comments.
+(async () => {
+  if (!window.claude || typeof window.claude.use !== "function") return;
+  const comments = await window.claude.use("comments");
+  if (!comments) return;
+  document.body.classList.add("comments-on");
+  document.querySelectorAll(".comment-btn").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const section = btn.closest(".plan-section");
+      try {
+        await comments.openComposer({ element: section });
+      } catch (err) {
+        if (err && err.code === "unavailable") document.body.classList.remove("comments-on");
+      }
+    });
+  });
+})();
+</script>
+
+<script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.esm.min.mjs";
+const forced = document.documentElement.dataset.theme;
+const dark = forced ? forced === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+mermaid.initialize({ startOnLoad: false, theme: dark ? "dark" : "neutral", securityLevel: "strict" });
+await mermaid.run({ querySelector: "pre.mermaid" });
+</script>

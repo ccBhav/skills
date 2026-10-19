@@ -16,6 +16,7 @@
         "./skills/bulletproof",
         "./skills/cc-pr-review",
         "./skills/lore",
+        "./skills/plan-feature",
         "./skills/pr-description",
         "./skills/sdk-design-patterns",
         "./skills/summerize-app"
